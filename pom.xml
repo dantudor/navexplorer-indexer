@@ -19,10 +19,16 @@
             <version>1.5.10.RELEASE</version>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>com.github.NavExplorer</groupId>-->
+            <!--<artifactId>navexplorer-library</artifactId>-->
+            <!--<version>feature~cold-staking-SNAPSHOT</version>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>com.github.NavExplorer</groupId>
+            <groupId>com.navexplorer</groupId>
             <artifactId>navexplorer-library</artifactId>
-            <version>master-SNAPSHOT</version>
+            <version>0.1.0</version>
         </dependency>
 
         <dependency>

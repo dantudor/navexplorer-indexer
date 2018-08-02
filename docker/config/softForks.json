@@ -1,0 +1,22 @@
+[
+  {
+    "name": "COLD STAKING",
+    "signalBit": 3
+  },
+  {
+    "name" : "SEGWIT",
+    "signalBit" : 4
+  },
+  {
+    "name" : "C FUND",
+    "signalBit" : 6
+  },
+  {
+    "name" : "C FUND ACCUMULATION",
+    "signalBit" : 7
+  },
+  {
+    "name" : "NTP SYNC",
+    "signalBit" : 8
+  }
+]
