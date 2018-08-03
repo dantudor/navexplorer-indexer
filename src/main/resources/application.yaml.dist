@@ -1,0 +1,22 @@
+spring:
+  data:
+    mongodb:
+      database: database
+      host: 127.0.0.1
+      port: 27017
+
+server:
+  port: 8888
+
+navcoin:
+  properties:
+    host: localhost
+    port: 8332
+    protocol: http
+    username: user
+    password: password
+  blocksInCycle: 400
+  network: mainnet
+
+zeromq:
+  address: tcp://127.0.0.1:28332

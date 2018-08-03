@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  indexer:
+    build: ./docker
+    volumes:
+     - ./target:/data
+     - ./docker/config:/config
+     - ./docker/log:/var/log

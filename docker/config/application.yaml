@@ -1,0 +1,21 @@
+spring:
+  data:
+    mongodb:
+      database: testnet
+      host: host.docker.internal
+      port: 27017
+
+server:
+  port: 8080
+
+navcoin:
+  properties:
+    host: host.docker.internal
+    port: 8332
+    protocol: http
+    username: user
+    password: password
+  blocksInCycle: 400
+
+zeromq:
+  address: tcp://host.docker.internal:28332
