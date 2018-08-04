@@ -42,7 +42,6 @@ public class IndexerApplication implements CommandLineRunner {
         softForkImporter.importSoftForks();
 
         blockRewinder.rewindTop10Blocks();
-        blockRewinder.rewindToHeight(10930L);
 
         Boolean indexing = true;
         while(indexing) {
