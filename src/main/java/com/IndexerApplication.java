@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class IndexerApplication implements CommandLineRunner {
-
     @Autowired
     private BlockRewinder blockRewinder;
 

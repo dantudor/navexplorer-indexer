@@ -63,18 +63,28 @@ public class AddressIndexerTest {
         BlockTransaction transaction2 = new BlockTransaction();
         transaction2.setHash("TRANSACTION_2");
 
-        List<BlockTransaction> blockTransactions = new ArrayList<>();
-        blockTransactions.add(transaction1);
-        blockTransactions.add(transaction2);
+        List<BlockTransaction> blockTransactions = Arrays.asList(transaction1, transaction2);
+
+        Set<String> addresses = new HashSet<>();
+        addresses.add("ADDRESS_1");
+
+        AddressTransaction addressTransaction1 = new AddressTransaction();
+        addressTransaction1.setAddress("ADDRESS_1");
+        AddressTransaction addressTransaction2 = new AddressTransaction();
+        addressTransaction2.setAddress("ADDRESS_1");
 
         when(blockTransactionService.getByHeight(block.getHeight())).thenReturn(blockTransactions);
-        when(addressExtractor.getAllAddressesFromBlockTransaction(any())).thenReturn(new HashSet<>());
+        when(addressExtractor.getAllAddressesFromBlockTransaction(any())).thenReturn(addresses);
+        when(addressTransactionFactory.create("ADDRESS_1", blockTransactions.get(0))).thenReturn(addressTransaction1);
+        when(addressTransactionFactory.create("ADDRESS_1", blockTransactions.get(1))).thenReturn(addressTransaction2);
 
         addressIndexer.indexBlock(block);
 
-        InOrder inOrder = inOrder(addressExtractor, addressExtractor);
-        inOrder.verify(addressExtractor).getAllAddressesFromBlockTransaction(transaction1);
-        inOrder.verify(addressExtractor).getAllAddressesFromBlockTransaction(transaction2);
+        InOrder inOrder1 = inOrder(addressExtractor, addressExtractor);
+        inOrder1.verify(addressExtractor).getAllAddressesFromBlockTransaction(transaction1);
+        inOrder1.verify(addressExtractor).getAllAddressesFromBlockTransaction(transaction2);
+
+        verify(addressTransition, times(2)).up(any(AddressTransaction.class));
     }
 
     public void it_will_transition_up_all_address_transactions_found() {
