@@ -64,32 +64,15 @@ public class IndexerApplicationTest {
     }
 
     @Test
-    public void it_will_stop_indexing_blocks_when_an_indexer_exception_is_thrown() {
-        Info info = new Info();
-        info.setBlocks(1000L);
-
-        when(navcoinService.getInfo()).thenReturn(info);
-        when(blockIndexer.indexBlocks())
-                .thenReturn(new Block())
-                .thenReturn(new Block())
-                .thenThrow(new IndexerException());
-
-        application.run();
-
-        verify(blockIndexer, times(3)).indexBlocks();
-    }
-
-    @Test
     public void it_will_initiate_the_zeromq_subscriber() {
         Info info = new Info();
         info.setBlocks(1000L);
 
         when(navcoinService.getInfo()).thenReturn(info);
-        when(blockIndexer.indexBlocks())
-                .thenThrow(new IndexerException());
 
         application.run();
 
+        verify(blockIndexer).indexAllBlocks();
         verify(subscriber).run();
     }
 }

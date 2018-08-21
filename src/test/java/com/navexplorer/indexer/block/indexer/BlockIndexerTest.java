@@ -212,4 +212,13 @@ public class BlockIndexerTest {
         assertThat(newBlock.getStake()).isEqualTo(transaction.getStake());
         assertThat(newBlock.getStakedBy()).isEqualTo(output2.getAddresses().get(0));
     }
+
+    @Test
+    public void it_will_stop_indexing_all_blocks_on_exception() {
+        when(blockIndexingActiveService.isActive()).thenReturn(false);
+
+        blockIndexer.indexAllBlocks();
+
+        verify(blockIndexingActiveService).isActive();
+    }
 }

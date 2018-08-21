@@ -1,6 +1,5 @@
 package com;
 
-import com.navexplorer.indexer.exception.IndexerException;
 import com.navexplorer.indexer.block.rewinder.BlockRewinder;
 import com.navexplorer.indexer.softfork.SoftForkImporter;
 import com.navexplorer.library.navcoin.service.NavcoinService;
@@ -41,15 +40,7 @@ public class IndexerApplication implements CommandLineRunner {
         softForkImporter.importSoftForks();
 
         blockRewinder.rewindTop10Blocks();
-
-        Boolean indexing = true;
-        while(indexing) {
-            try {
-                blockIndexer.indexBlocks();
-            } catch (IndexerException e) {
-                indexing = false;
-            }
-        }
+        blockIndexer.indexAllBlocks();
 
         System.out.println("Ready to receive blocks from navcoind...");
         subscriber.run();

@@ -43,6 +43,7 @@ public class PreviousInputService {
 
             input.setPreviousOutputBlock(previousTransaction.getHeight());
             input.setAddresses(previousOutput.getAddresses());
+            input.setAmount(previousOutput.getAmount());
 
             blockTransactionRepository.save(transaction);
         });

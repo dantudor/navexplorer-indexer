@@ -49,7 +49,7 @@ public class Subscriber {
                             String messageContent = Converter.bin2hex(bytes);
 
                             logger.info(String.format("Message: %s - %s", messageType, messageContent));
-                            blockIndexer.indexBlocks();
+                            blockIndexer.indexAllBlocks();
                         }
                         break;
                 }

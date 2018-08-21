@@ -42,6 +42,17 @@ public class BlockIndexer {
     @Autowired
     private BlockFactory blockFactory;
 
+    public void indexAllBlocks() {
+        Boolean indexing = true;
+        while (indexing) {
+            try {
+                indexBlocks();
+            } catch (IndexerException e) {
+                indexing = false;
+            }
+        }
+    }
+
     public Block indexBlocks() throws IndexerException {
         try {
             mustBeActive();
