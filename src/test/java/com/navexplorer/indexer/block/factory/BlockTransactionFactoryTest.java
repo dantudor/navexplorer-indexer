@@ -33,6 +33,7 @@ public class BlockTransactionFactoryTest {
     @Test
     public void it_can_create_a_block_transaction() {
         Transaction apiTransaction = new Transaction();
+        apiTransaction.setHeight(10);
 
         List<Input> inputs = new ArrayList<>();
         List<Output> outputs = new ArrayList<>();
@@ -57,6 +58,7 @@ public class BlockTransactionFactoryTest {
     @Test
     public void it_can_apply_fees() {
         Transaction apiTransaction = new Transaction();
+        apiTransaction.setHeight(10);
 
         Input input1 = new Input();
         input1.setAmount(100.0);
@@ -78,6 +80,7 @@ public class BlockTransactionFactoryTest {
     @Test
     public void it_can_apply_a_staking_type() {
         Transaction apiTransaction = new Transaction();
+        apiTransaction.setHeight(10);
 
         Input input1 = new Input();
         input1.setAmount(5.0);
