@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.navcoin.response.Transaction;
 import org.navcoin.response.transaction.Vin;
 import org.springframework.test.context.junit4.SpringRunner;
-import sun.jvm.hotspot.oops.Array;
 
 import java.util.Arrays;
 import java.util.List;
