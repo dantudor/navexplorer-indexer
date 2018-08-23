@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.navcoin.response.Transaction;
 import org.navcoin.response.transaction.Vin;
 import org.springframework.test.context.junit4.SpringRunner;
+import sun.jvm.hotspot.oops.Array;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,6 +42,7 @@ public class InputFactoryTest {
         Output output1 = new Output();
         output1.setAmount(10000.0);
         output1.setIndex(1);
+        output1.setAddresses(Arrays.asList("ADDRESS 1", "ADDRESS 2"));
         previousTransaction1.setOutputs(Arrays.asList(output1));
 
         apiTransaction.setVin((Vin[]) Arrays.asList(vin1).toArray());
@@ -49,10 +51,10 @@ public class InputFactoryTest {
 
         List<Input> inputs = inputFactory.createInputs(apiTransaction);
 
-        assertThat(inputs.get(0).getAddresses()).isEqualTo(Arrays.asList(vin1.getAddress()));
         assertThat(inputs.get(0).getAmount()).isEqualTo(output1.getAmount());
         assertThat(inputs.get(0).getPreviousOutput()).isEqualTo(vin1.getTxid());
         assertThat(inputs.get(0).getPreviousOutputBlock()).isEqualTo(previousTransaction1.getHeight());
         assertThat(inputs.get(0).getIndex()).isEqualTo(vin1.getVout());
+        assertThat(inputs.get(0).getAddresses()).isEqualTo(output1.getAddresses());
     }
 }

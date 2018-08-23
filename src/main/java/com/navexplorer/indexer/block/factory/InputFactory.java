@@ -41,6 +41,7 @@ public class InputFactory {
             input.setAmount(transaction.getOutput(vin.getVout()).getAmount());
             input.setPreviousOutput(transaction.getHash());
             input.setPreviousOutputBlock(transaction.getHeight());
+            input.setAddresses(transaction.getOutput(vin.getVout()).getAddresses());
         }
 
         return input;
