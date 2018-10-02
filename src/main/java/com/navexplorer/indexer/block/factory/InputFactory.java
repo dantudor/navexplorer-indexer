@@ -32,7 +32,7 @@ public class InputFactory {
             input.getAddresses().add(vin.getAddress());
         }
 
-        if (vin.getTxid() != null && vin.getVout() != null && vin.getValueSat() == null) {
+        if (vin.getTxid() != null && vin.getVout() != null) {
             input.setPreviousOutput(vin.getTxid());
             input.setIndex(vin.getVout());
 
