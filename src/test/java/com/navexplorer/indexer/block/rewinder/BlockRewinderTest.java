@@ -1,6 +1,7 @@
 package com.navexplorer.indexer.block.rewinder;
 
 import com.navexplorer.indexer.block.event.BlockRewindEvent;
+import com.navexplorer.indexer.block.event.BlockTransactionRewindEvent;
 import com.navexplorer.indexer.block.service.BlockIndexingActiveService;
 import com.navexplorer.library.block.entity.Block;
 import com.navexplorer.library.block.entity.BlockTransaction;
@@ -13,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.navcoin.response.Transaction;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -78,18 +80,18 @@ public class BlockRewinderTest {
         List<Block> blocks = Arrays.asList(block, block, block, block, block, block, block, block, block, block);
 
         BlockTransaction blockTransaction = new BlockTransaction();
-        List<BlockTransaction> blockTransactions = Arrays.asList(blockTransaction);
+        List<BlockTransaction> blockTransactions = Arrays.asList(blockTransaction, blockTransaction);
 
         when(blockIndexingActiveService.isActive()).thenReturn(true);
         when(blockRepository.findTop10ByOrderByHeightDesc()).thenReturn(blocks);
         when(blockTransactionService.getByHeight(anyLong())).thenReturn(blockTransactions);
 
-
         blockRewinder.rewindTop10Blocks();
 
-        verify(blockTransactionRepository, times(blocks.size())).delete(blockTransactions);
+        verify(blockTransactionRepository, times(blocks.size() * blockTransactions.size())).delete(blockTransaction);
         verify(blockRepository, times(blocks.size())).delete(block);
-        verify(applicationEventPublisher, times(blocks.size())).publishEvent(any(BlockRewindEvent.class));
+        verify(applicationEventPublisher, times(blocks.size() + (blocks.size() * blockTransactions.size())))
+                .publishEvent(any(ApplicationEvent.class));
     }
 
     @Test
@@ -105,17 +107,21 @@ public class BlockRewinderTest {
         Block block3 = new Block();
         block3.setHeight(10L);
 
+        BlockTransaction blockTransaction = new BlockTransaction();
+        List<BlockTransaction> blockTransactions = Arrays.asList(blockTransaction, blockTransaction);
+
         when(blockIndexingActiveService.isActive()).thenReturn(true);
         when(blockRepository.findFirstByOrderByHeightDesc())
                 .thenReturn(block1)
                 .thenReturn(block2)
                 .thenReturn(block3);
+        when(blockTransactionService.getByHeight(anyLong())).thenReturn(blockTransactions);
 
         blockRewinder.rewindToHeight(targetHeight);
 
-        verify(blockTransactionRepository, times(2)).delete(anyListOf(BlockTransaction.class));
+        verify(blockTransactionRepository, times(4)).delete(blockTransaction);
         verify(blockRepository, times(2)).delete(any(Block.class));
-        verify(applicationEventPublisher, times(2)).publishEvent(any(BlockRewindEvent.class));
+        verify(applicationEventPublisher, times(6)).publishEvent(any(ApplicationEvent.class));
     }
 
     @Test
@@ -130,16 +136,20 @@ public class BlockRewinderTest {
         Block block2 = new Block();
         block2.setHeight(100L);
 
+        BlockTransaction blockTransaction = new BlockTransaction();
+        List<BlockTransaction> blockTransactions = Arrays.asList(blockTransaction, blockTransaction);
+
         when(blockIndexingActiveService.isActive()).thenReturn(true);
         when(navcoinService.getTransactionByHash(hash)).thenReturn(transaction);
         when(blockRepository.findFirstByOrderByHeightDesc())
                 .thenReturn(block1)
                 .thenReturn(block2);
+        when(blockTransactionService.getByHeight(anyLong())).thenReturn(blockTransactions);
 
         blockRewinder.rewindToMissingTransaction(hash);
 
-        verify(blockTransactionRepository).delete(anyListOf(BlockTransaction.class));
-        verify(blockRepository).delete(any(Block.class));
-        verify(applicationEventPublisher).publishEvent(any(BlockRewindEvent.class));
+        verify(blockTransactionRepository, times(2)).delete(blockTransaction);
+        verify(blockRepository).delete(block1);
+        verify(applicationEventPublisher, times(3)).publishEvent(any(ApplicationEvent.class));
     }
 }

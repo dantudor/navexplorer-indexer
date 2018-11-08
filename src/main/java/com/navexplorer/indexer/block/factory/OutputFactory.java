@@ -23,7 +23,7 @@ public class OutputFactory {
         Output output = new Output();
         output.setIndex(vout.getN().intValue());
 
-        if (vout.getScriptPubKey() != null && vout.getScriptPubKey().getAddresses() != null) {
+        if (vout.getScriptPubKey() != null) {
             output.setType(OutputType.fromValue(vout.getScriptPubKey().getType()));
             output.setAmount(vout.getValueSat());
 
@@ -31,6 +31,10 @@ public class OutputFactory {
                 output.getAddresses().add("Community Fund");
             } else {
                 output.setAddresses(vout.getScriptPubKey().getAddresses());
+            }
+
+            if (Arrays.asList(OutputType.PROPOSAL_YES_VOTE.value(), OutputType.PROPOSAL_NO_VOTE.value()).contains(vout.getScriptPubKey().getType())) {
+                output.setHash(vout.getScriptPubKey().getHash());
             }
         }
 

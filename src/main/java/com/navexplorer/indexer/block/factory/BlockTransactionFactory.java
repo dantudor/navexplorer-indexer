@@ -28,6 +28,8 @@ public class BlockTransactionFactory {
         transaction.setFees(applyFees(transaction));
         transaction.setType(applyType(transaction));
         transaction.setStake(applyStaking(transaction));
+        transaction.setVersion(apiTransaction.getVersion());
+        transaction.setAnonDestination(apiTransaction.getAnonDestination());
 
         return transaction;
     }
@@ -64,7 +66,7 @@ public class BlockTransactionFactory {
             transaction.getInputs().forEach(i -> i.getAddresses().add(stakingAddress));
 
             return transaction.getOutputs().stream()
-                    .filter(t -> t.getAddresses().size() != 0 && !t.getAddresses().contains("Community Fund"))
+                    .filter(t -> t.getAddresses().contains(stakingAddress))
                     .mapToDouble(Output::getAmount).sum() - transaction.getInputAmount();
         }
 

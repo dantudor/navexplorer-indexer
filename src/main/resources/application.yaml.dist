@@ -20,3 +20,15 @@ navcoin:
 
 zeromq:
   address: tcp://127.0.0.1:28332
+
+communityFund:
+  blocksInCycle: 20160
+  minQuorum: 0.5
+  proposalVoting:
+    cycles: 4
+    accept: 0.75
+    reject: 0.675
+  paymentVoting:
+    cycles: 6
+    accept: 0.5
+    reject: 0.5

@@ -127,7 +127,12 @@ public class AddressTransactionFactoryTest {
         input3.setAddresses(Arrays.asList("OTHER ADDRESS"));
         input3.setAmount(25.0);
 
+        Output output1 = new Output();
+        output1.setAddresses(Arrays.asList(address));
+        output1.setAmount(25.0);
+
         blockTransaction.setInputs(Arrays.asList(input1, input2, input3));
+        blockTransaction.setOutputs(Arrays.asList(output1));
         AddressTransaction transaction = addressTransactionFactory.create(address, blockTransaction);
         assertThat(transaction.getSent()).isEqualTo(input1.getAmount() + input2.getAmount());
     }

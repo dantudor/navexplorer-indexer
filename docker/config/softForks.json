@@ -18,5 +18,21 @@
   {
     "name" : "NTP SYNC",
     "signalBit" : 8
+  },
+  {
+    "name" : "C FUND 500 ACCUMULATION",
+    "signalBit" : 14
+  },
+  {
+    "name" : "FIXED BLOCK REWARD",
+    "signalBit" : 15
+  },
+  {
+    "name" : "DOUBLE C FUND CONTRIBUTION",
+    "signalBit" : 16
+  },
+  {
+    "name" : "ON-CHAIN PRIVACY",
+    "signalBit" : 17
   }
 ]

@@ -1,9 +1,6 @@
 package com.navexplorer.indexer.block.factory;
 
-import com.navexplorer.library.block.entity.BlockTransaction;
-import com.navexplorer.library.block.entity.BlockTransactionType;
-import com.navexplorer.library.block.entity.Input;
-import com.navexplorer.library.block.entity.Output;
+import com.navexplorer.library.block.entity.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

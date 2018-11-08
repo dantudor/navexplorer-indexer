@@ -32,6 +32,7 @@ public class AddressTransition {
 
             case RECEIVE:
             case COMMUNITY_FUND:
+            case COMMUNITY_FUND_PAYOUT:
                 address.receive(transaction.getReceived() - transaction.getSent());
                 break;
 
@@ -62,6 +63,7 @@ public class AddressTransition {
 
             case RECEIVE:
             case COMMUNITY_FUND:
+            case COMMUNITY_FUND_PAYOUT:
                 Double amountReceived = transaction.getReceived() - transaction.getSent();
 
                 address.setReceivedCount(address.getReceivedCount() - 1);

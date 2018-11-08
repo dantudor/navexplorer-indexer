@@ -1,6 +1,7 @@
 package com.navexplorer.indexer.zeromq;
 
 import com.navexplorer.indexer.block.indexer.BlockIndexer;
+import com.navexplorer.indexer.communityfund.indexer.ProposalIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class Subscriber {
 
     @Autowired
     BlockIndexer blockIndexer;
+
+    @Autowired
+    ProposalIndexer proposalIndexer;
 
     public void run() {
         ZMQ.Context context = ZMQ.context(1);
@@ -50,6 +54,7 @@ public class Subscriber {
 
                             logger.info(String.format("Message: %s - %s", messageType, messageContent));
                             blockIndexer.indexAllBlocks();
+                            proposalIndexer.updateAllProposals();
                         }
                         break;
                 }

@@ -36,13 +36,19 @@ public class AddressTransactionFactory {
             return null;
         }
 
-        if (isStaking(blockTransaction)) {
+        String stakingAddress = blockTransaction.getOutputs().stream()
+                .filter(t -> t.getAddresses().size() != 0 && !t.getAddresses().contains("Community Fund"))
+                .findFirst().orElse(new Output()).getAddresses().get(0);
+
+        if (isStaking(blockTransaction) && address.equals(stakingAddress)) {
             transaction.setType(AddressTransactionType.STAKING);
 
             return transaction;
         }
 
-        if (isReceiving(inputs, outputs)) {
+        if (isCommunityFundPayout(blockTransaction, address, stakingAddress)) {
+            transaction.setType(AddressTransactionType.COMMUNITY_FUND_PAYOUT);
+        } else if (isReceiving(inputs, outputs)) {
             transaction.setType(AddressTransactionType.RECEIVE);
         } else {
             transaction.setType(AddressTransactionType.SEND);
@@ -53,6 +59,10 @@ public class AddressTransactionFactory {
 
     private Boolean isCommunityFund(String address) {
         return address.equals("Community Fund");
+    }
+
+    private Boolean isCommunityFundPayout(BlockTransaction transaction, String address, String stakingAddress) {
+        return isStaking(transaction) && !address.equals(stakingAddress);
     }
 
     private Boolean isEmpty(AddressTransaction transaction) {

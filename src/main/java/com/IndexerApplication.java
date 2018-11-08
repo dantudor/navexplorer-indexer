@@ -1,6 +1,8 @@
 package com;
 
 import com.navexplorer.indexer.block.rewinder.BlockRewinder;
+import com.navexplorer.indexer.communityfund.indexer.PaymentRequestIndexer;
+import com.navexplorer.indexer.communityfund.indexer.ProposalIndexer;
 import com.navexplorer.indexer.softfork.SoftForkImporter;
 import com.navexplorer.library.navcoin.service.NavcoinService;
 import com.navexplorer.indexer.block.indexer.BlockIndexer;
@@ -29,6 +31,12 @@ public class IndexerApplication implements CommandLineRunner {
     @Autowired
     private NavcoinService navcoinService;
 
+    @Autowired
+    private ProposalIndexer proposalIndexer;
+
+    @Autowired
+    private PaymentRequestIndexer paymentRequestIndexer;
+
     public static void main(String[] args) {
         SpringApplication.run(IndexerApplication.class, args);
     }
@@ -41,6 +49,9 @@ public class IndexerApplication implements CommandLineRunner {
 
         blockRewinder.rewindTop10Blocks();
         blockIndexer.indexAllBlocks();
+
+        proposalIndexer.updateAllProposals();
+        paymentRequestIndexer.updateAllPaymentRequests();
 
         System.out.println("Ready to receive blocks from navcoind...");
         subscriber.run();

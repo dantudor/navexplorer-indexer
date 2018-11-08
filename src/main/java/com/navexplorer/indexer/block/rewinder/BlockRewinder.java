@@ -1,6 +1,7 @@
 package com.navexplorer.indexer.block.rewinder;
 
 import com.navexplorer.indexer.block.event.BlockRewindEvent;
+import com.navexplorer.indexer.block.event.BlockTransactionRewindEvent;
 import com.navexplorer.indexer.block.service.BlockIndexingActiveService;
 import com.navexplorer.library.block.entity.Block;
 import com.navexplorer.library.block.repository.BlockRepository;
@@ -83,10 +84,12 @@ public class BlockRewinder {
 
         logger.info(String.format("Rewinding block %s", block.getHeight()));
 
-        blockTransactionRepository.delete(blockTransactionService.getByHeight(block.getHeight()));
-
-        blockRepository.delete(block);
+        blockTransactionService.getByHeight(block.getHeight()).forEach(blockTransaction -> {
+            applicationEventPublisher.publishEvent(new BlockTransactionRewindEvent(this, blockTransaction));
+            blockTransactionRepository.delete(blockTransaction);
+        });
 
         applicationEventPublisher.publishEvent(new BlockRewindEvent(this, block));
+        blockRepository.delete(block);
     }
 }
