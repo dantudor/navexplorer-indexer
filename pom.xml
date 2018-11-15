@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.github.NavExplorer</groupId>
             <artifactId>navexplorer-library</artifactId>
-            <version>0.4</version>
+            <version>feature~cold-staking-SNAPSHOT</version>
         </dependency>
 
         <dependency>

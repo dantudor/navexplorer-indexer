@@ -38,20 +38,10 @@ public class AddressTransition {
 
             case STAKING:
                 if (transaction.getColdStaking()) {
-                    address.setColdStakedCount(address.getColdStakedCount() + 1);
-                    address.setColdStakedSent(address.getColdStakedSent() + transaction.getSent());
-                    address.setColdStakedReceived(address.getStakedReceived() + transaction.getReceived());
-                    address.setColdStaked(address.getColdStaked() + amountStaked);
-                    address.setBalance(address.getBalance() + amountStaked);
-
+                    address.coldStake(transaction.getSent(), transaction.getReceived());
                 } else {
-                    address.setStakedCount(address.getStakedCount() + 1);
-                    address.setStakedSent(address.getStakedSent() + transaction.getSent());
-                    address.setStakedReceived(address.getStakedReceived() + transaction.getReceived());
-                    address.setStaked(address.getStaked() + amountStaked);
-                    address.setBalance(address.getBalance() + amountStaked);
+                    address.stake(transaction.getSent(), transaction.getReceived());
                 }
-//                address.stake(transaction.getSent(), transaction.getReceived());
                 break;
         }
 
