@@ -1,7 +1,8 @@
 package com;
 
-import com.navexplorer.indexer.exception.IndexerException;
 import com.navexplorer.indexer.block.rewinder.BlockRewinder;
+import com.navexplorer.indexer.communityfund.indexer.PaymentRequestIndexer;
+import com.navexplorer.indexer.communityfund.indexer.ProposalIndexer;
 import com.navexplorer.indexer.softfork.SoftForkImporter;
 import com.navexplorer.library.navcoin.service.NavcoinService;
 import com.navexplorer.indexer.block.indexer.BlockIndexer;
@@ -15,7 +16,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class IndexerApplication implements CommandLineRunner {
-
     @Autowired
     private BlockRewinder blockRewinder;
 
@@ -31,6 +31,12 @@ public class IndexerApplication implements CommandLineRunner {
     @Autowired
     private NavcoinService navcoinService;
 
+    @Autowired
+    private ProposalIndexer proposalIndexer;
+
+    @Autowired
+    private PaymentRequestIndexer paymentRequestIndexer;
+
     public static void main(String[] args) {
         SpringApplication.run(IndexerApplication.class, args);
     }
@@ -42,16 +48,10 @@ public class IndexerApplication implements CommandLineRunner {
         softForkImporter.importSoftForks();
 
         blockRewinder.rewindTop10Blocks();
-        blockRewinder.rewindToHeight(10930L);
+        blockIndexer.indexAllBlocks();
 
-        Boolean indexing = true;
-        while(indexing) {
-            try {
-                blockIndexer.indexBlocks();
-            } catch (IndexerException e) {
-                indexing = false;
-            }
-        }
+        proposalIndexer.updateAllProposals();
+        paymentRequestIndexer.updateAllPaymentRequests();
 
         System.out.println("Ready to receive blocks from navcoind...");
         subscriber.run();

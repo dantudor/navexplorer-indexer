@@ -21,6 +21,7 @@ public class AddressRewinder {
     public void rewind(Block block) {
         logger.info(String.format("Rewinding addresses for block: %s", block.getHeight()));
 
-        addressTransactionRepository.findByHeight(block.getHeight()).forEach(addressTransition::down);
+        addressTransactionRepository.findByHeight(block.getHeight())
+                .forEach(transaction -> addressTransition.down(transaction));
     }
 }

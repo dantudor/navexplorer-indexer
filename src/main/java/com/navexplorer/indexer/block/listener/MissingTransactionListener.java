@@ -18,6 +18,7 @@ public class MissingTransactionListener implements ApplicationListener<MissingTr
     @Override
     public void onApplicationEvent(MissingTransactionEvent event) {
         logger.info("Missing transaction detected, rewinding to hash " + event.getHash());
+
         blockRewinder.rewindToMissingTransaction(event.getHash());
     }
 }

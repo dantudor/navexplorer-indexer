@@ -20,8 +20,11 @@ public class BlockTransactionIndexer {
     @Autowired
     ApplicationEventPublisher applicationEventPublisher;
 
+    @Autowired
+    BlockTransactionFactory blockTransactionFactory;
+
     public void indexTransaction(String hash) {
-        BlockTransaction transaction = BlockTransactionFactory.createTransaction(navcoinService.getTransactionByHash(hash));
+        BlockTransaction transaction = blockTransactionFactory.createTransaction(navcoinService.getTransactionByHash(hash));
         blockTransactionService.save(transaction);
 
         applicationEventPublisher.publishEvent(new BlockTransactionIndexedEvent(this, transaction));

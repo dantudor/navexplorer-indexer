@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>navexplorer-indexer</artifactId>
-    <version>0.1.0</version>
+    <version>0.2</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -19,16 +19,10 @@
             <version>1.5.10.RELEASE</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.github.NavExplorer</groupId>-->
-            <!--<artifactId>navexplorer-library</artifactId>-->
-            <!--<version>feature~cold-staking-SNAPSHOT</version>-->
-        <!--</dependency>-->
-
         <dependency>
-            <groupId>com.navexplorer</groupId>
+            <groupId>com.github.NavExplorer</groupId>
             <artifactId>navexplorer-library</artifactId>
-            <version>0.1.0</version>
+            <version>0.4</version>
         </dependency>
 
         <dependency>
@@ -87,6 +81,18 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <formats>
+                        <format>html</format>
+                        <format>xml</format>
+                    </formats>
+                    <check />
                 </configuration>
             </plugin>
         </plugins>

@@ -39,6 +39,20 @@ public class BlockIndexer {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Autowired
+    private BlockFactory blockFactory;
+
+    public void indexAllBlocks() {
+        Boolean indexing = true;
+        while (indexing) {
+            try {
+                indexBlocks();
+            } catch (IndexerException e) {
+                indexing = false;
+            }
+        }
+    }
+
     public Block indexBlocks() throws IndexerException {
         try {
             mustBeActive();
@@ -64,7 +78,7 @@ public class BlockIndexer {
     }
 
     private Block indexBlock(org.navcoin.response.Block apiBlock) {
-        Block block = BlockFactory.createBlock(apiBlock);
+        Block block = blockFactory.createBlock(apiBlock);
         blockService.save(block);
 
         apiBlock.getTx().forEach(blockTransactionIndexer::indexTransaction);
@@ -96,8 +110,8 @@ public class BlockIndexer {
 
         block.setStake(transaction.getStake());
 
-        transaction.getOutputs().stream().filter(o -> o.getAddress() != null).findFirst()
-                .ifPresent(output -> block.setStakedBy(output.getAddress()));
+        transaction.getOutputs().stream().filter(o -> o.getAddresses().size() > 0).findFirst()
+                .ifPresent(output -> block.setStakedBy(output.getAddresses().get(0)));
     }
 
     private Boolean blockIsOrphan(Block bestBlock, org.navcoin.response.Block apiBlock) {

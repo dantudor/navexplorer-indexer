@@ -7,14 +7,16 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BlockFactory {
     private static final Logger logger = LoggerFactory.getLogger(BlockFactory.class);
 
-    @Value("${navcoin.blocksInCycle")
-    private static Integer blocksInCycle;
+    @Value("${navcoin.blocksInCycle}")
+    private Integer blocksInCycle;
 
-    public static Block createBlock(org.navcoin.response.Block apiBlock) {
+    public Block createBlock(org.navcoin.response.Block apiBlock) {
         logger.info(String.format("Creating new block at height %s", apiBlock.getHeight()));
 
         try {
