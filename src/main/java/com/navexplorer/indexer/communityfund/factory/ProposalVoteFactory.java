@@ -17,8 +17,6 @@ public class ProposalVoteFactory {
         transactions.forEach(transaction -> {
             transaction.getOutputs().forEach(output -> {
                 if (output.getType().equals(OutputType.PROPOSAL_YES_VOTE)) {
-                    System.out.print(block);
-                    System.exit(1);
                     ProposalVote vote = new ProposalVote();
                     vote.setAddress(block.getStakedBy());
                     vote.setHeight(block.getHeight().intValue());
