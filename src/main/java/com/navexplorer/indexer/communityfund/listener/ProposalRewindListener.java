@@ -25,8 +25,6 @@ public class ProposalRewindListener implements ApplicationListener<BlockTransact
             proposalRewinder.rewindProposal(transaction);
         }
 
-        if (transaction.isEmpty()) {
-            proposalVoteRewinder.rewindProposalVotes(transaction.getHeight());
-        }
+        proposalVoteRewinder.rewindProposalVotes(transaction.getHeight());
     }
 }
