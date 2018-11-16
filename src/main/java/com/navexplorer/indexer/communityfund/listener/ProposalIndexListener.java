@@ -27,8 +27,6 @@ public class ProposalIndexListener implements ApplicationListener<BlockTransacti
             proposalIndexer.indexProposal(transaction);
         }
 
-        if (transaction.isEmpty()) {
-            proposalVoteIndexer.indexProposalVotes(block, transaction);
-        }
+        proposalVoteIndexer.indexProposalVotes(block, transaction);
     }
 }
