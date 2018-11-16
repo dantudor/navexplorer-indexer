@@ -2,6 +2,7 @@ package com.navexplorer.indexer.block.listener;
 
 import com.navexplorer.indexer.block.event.BlockTransactionIndexedEvent;
 import com.navexplorer.indexer.block.service.PreviousInputService;
+import com.navexplorer.library.block.entity.Block;
 import com.navexplorer.library.block.entity.BlockTransaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +22,10 @@ public class BlockTransactionIndexedListenerTest {
 
     @Test
     public void it_will_trigger_previous_index_updater() {
+        Block block = new Block();
         BlockTransaction transaction = new BlockTransaction();
 
-        blockTransactionIndexedListener.onApplicationEvent(new BlockTransactionIndexedEvent(new Object(), transaction));
+        blockTransactionIndexedListener.onApplicationEvent(new BlockTransactionIndexedEvent(new Object(), block, transaction));
 
         verify(previousInputService).updateTransaction(transaction);
     }
