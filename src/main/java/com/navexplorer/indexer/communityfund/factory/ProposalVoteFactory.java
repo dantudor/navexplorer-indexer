@@ -11,27 +11,29 @@ import java.util.List;
 
 @Service
 public class ProposalVoteFactory {
-    public List<ProposalVote> createProposalVotes(Block block, BlockTransaction transaction) {
+    public List<ProposalVote> createProposalVotes(Block block, List<BlockTransaction> transactions) {
         List<ProposalVote> proposalVotes = new ArrayList<>();
 
-        transaction.getOutputs().forEach(output -> {
-            if (output.getType().equals(OutputType.PROPOSAL_YES_VOTE)) {
-                System.out.print(block);
-                System.exit(1);
-                ProposalVote vote = new ProposalVote();
-                vote.setAddress(block.getStakedBy());
-                vote.setHeight(block.getHeight().intValue());
-                vote.setProposal(output.getHash());
-                vote.setVote(true);
-                proposalVotes.add(vote);
-            } else if (output.getType().equals(OutputType.PROPOSAL_NO_VOTE)) {
-                ProposalVote vote = new ProposalVote();
-                vote.setAddress(block.getStakedBy());
-                vote.setHeight(block.getHeight().intValue());
-                vote.setProposal(output.getHash());
-                vote.setVote(false);
-                proposalVotes.add(vote);
-            }
+        transactions.forEach(transaction -> {
+            transaction.getOutputs().forEach(output -> {
+                if (output.getType().equals(OutputType.PROPOSAL_YES_VOTE)) {
+                    System.out.print(block);
+                    System.exit(1);
+                    ProposalVote vote = new ProposalVote();
+                    vote.setAddress(block.getStakedBy());
+                    vote.setHeight(block.getHeight().intValue());
+                    vote.setProposal(output.getHash());
+                    vote.setVote(true);
+                    proposalVotes.add(vote);
+                } else if (output.getType().equals(OutputType.PROPOSAL_NO_VOTE)) {
+                    ProposalVote vote = new ProposalVote();
+                    vote.setAddress(block.getStakedBy());
+                    vote.setHeight(block.getHeight().intValue());
+                    vote.setProposal(output.getHash());
+                    vote.setVote(false);
+                    proposalVotes.add(vote);
+                }
+            });
         });
 
         return proposalVotes;

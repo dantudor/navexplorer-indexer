@@ -1,6 +1,7 @@
 package com.navexplorer.indexer.block.indexer;
 
 import com.navexplorer.indexer.block.event.BlockIndexedEvent;
+import com.navexplorer.indexer.block.event.BlockTransactionIndexedEvent;
 import com.navexplorer.indexer.block.event.OrphanedBlockEvent;
 import com.navexplorer.indexer.block.exception.*;
 import com.navexplorer.indexer.block.factory.BlockFactory;
