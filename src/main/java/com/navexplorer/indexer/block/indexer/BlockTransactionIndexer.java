@@ -5,7 +5,6 @@ import com.navexplorer.indexer.block.factory.BlockTransactionFactory;
 import com.navexplorer.library.block.entity.Block;
 import com.navexplorer.library.block.entity.BlockTransaction;
 import com.navexplorer.library.block.repository.BlockRepository;
-import com.navexplorer.library.block.service.BlockService;
 import com.navexplorer.library.block.service.BlockTransactionService;
 import com.navexplorer.library.navcoin.service.NavcoinService;
 import org.springframework.beans.factory.annotation.Autowired;

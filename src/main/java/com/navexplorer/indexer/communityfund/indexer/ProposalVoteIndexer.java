@@ -18,8 +18,8 @@ public class ProposalVoteIndexer {
     @Autowired
     private ProposalVoteRepository proposalVoteRepository;
 
-    public void indexProposalVotes(Block block, BlockTransaction transaction) {
-        List<ProposalVote> proposalVotes = proposalVoteFactory.createProposalVotes(block, transaction);
+    public void indexProposalVotes(Block block, List<BlockTransaction> transactions) {
+        List<ProposalVote> proposalVotes = proposalVoteFactory.createProposalVotes(block, transactions);
         if (proposalVotes.size() != 0) {
             proposalVoteRepository.save(proposalVotes);
         }
