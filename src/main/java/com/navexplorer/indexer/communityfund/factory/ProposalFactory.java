@@ -12,20 +12,20 @@ public class ProposalFactory {
         Proposal proposal = new Proposal();
         proposal.setCreatedAt(createdAt);
         proposal.setHeight(height);
+        proposal.setDescription(apiProposal.getDescription());
+        proposal.setHash(apiProposal.getHash());
+        proposal.setBlockHash(apiProposal.getBlockHash());
+        proposal.setRequestedAmount(apiProposal.getRequestedAmount());
+        proposal.setPaymentAddress(apiProposal.getPaymentAddress());
+        proposal.setProposalDuration(apiProposal.getProposalDuration());
+        proposal.setUserPaidFee(apiProposal.getUserPaidFee());
 
         return updateProposal(proposal, apiProposal);
     }
 
     public Proposal updateProposal(Proposal proposal, org.navcoin.response.Proposal apiProposal) {
         proposal.setVersion(apiProposal.getVersion());
-        proposal.setHash(apiProposal.getHash());
-        proposal.setBlockHash(apiProposal.getBlockHash());
-        proposal.setDescription(apiProposal.getDescription());
-        proposal.setRequestedAmount(apiProposal.getRequestedAmount());
         proposal.setNotPaidYet(apiProposal.getNotPaidYet());
-        proposal.setUserPaidFee(apiProposal.getUserPaidFee());
-        proposal.setPaymentAddress(apiProposal.getPaymentAddress());
-        proposal.setProposalDuration(apiProposal.getProposalDuration());
         proposal.setState(ProposalState.fromId(apiProposal.getState()));
         proposal.setStatus(apiProposal.getStatus());
         proposal.setStateChangedOnBlock(apiProposal.getStateChangedOnBlock());
