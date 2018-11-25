@@ -3,6 +3,7 @@ package com.navexplorer.indexer.block.indexer;
 import com.navexplorer.indexer.block.event.BlockTransactionIndexedEvent;
 import com.navexplorer.indexer.block.factory.BlockTransactionFactory;
 import com.navexplorer.library.block.entity.BlockTransaction;
+import com.navexplorer.library.block.repository.BlockRepository;
 import com.navexplorer.library.block.service.BlockTransactionService;
 import com.navexplorer.library.navcoin.service.NavcoinService;
 import org.junit.Test;
@@ -32,11 +33,15 @@ public class BlockTransactionIndexerTest {
     @Mock
     private BlockTransactionFactory blockTransactionFactory;
 
+    @Mock
+    private BlockRepository blockRepository;
+
     @Test
     public void it_can_index_a_new_block_transaction() {
         String hash = "HASH";
         Transaction apiTransaction = new Transaction();
         BlockTransaction transaction = new BlockTransaction();
+        transaction.setHeight(100);
 
         when(navcoinService.getTransactionByHash(hash)).thenReturn(apiTransaction);
         when(blockTransactionFactory.createTransaction(apiTransaction)).thenReturn(transaction);
@@ -44,6 +49,7 @@ public class BlockTransactionIndexerTest {
         blockTransactionIndexer.indexTransaction(hash);
 
         verify(blockTransactionService).save(transaction);
+        verify(blockRepository).findByHeight(transaction.getHeight().longValue());
         verify(applicationEventPublisher).publishEvent(any(BlockTransactionIndexedEvent.class));
     }
 }
