@@ -1,9 +1,8 @@
 package com.navexplorer.indexer.communityfund.indexer;
 
-import com.mongodb.DuplicateKeyException;
+import org.springframework.dao.DuplicateKeyException;
 import com.navexplorer.indexer.communityfund.factory.ProposalFactory;
 import com.navexplorer.library.block.entity.BlockTransaction;
-import com.navexplorer.library.block.entity.BlockTransactionType;
 import com.navexplorer.library.communityfund.entity.Proposal;
 import com.navexplorer.library.communityfund.entity.ProposalState;
 import com.navexplorer.library.communityfund.repository.ProposalRepository;
