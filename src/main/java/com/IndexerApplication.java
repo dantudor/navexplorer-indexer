@@ -1,5 +1,6 @@
 package com;
 
+import com.navexplorer.indexer.address.indexer.AddressLabelIndexer;
 import com.navexplorer.indexer.block.rewinder.BlockRewinder;
 import com.navexplorer.indexer.communityfund.indexer.PaymentRequestIndexer;
 import com.navexplorer.indexer.communityfund.indexer.ProposalIndexer;
@@ -26,6 +27,9 @@ public class IndexerApplication implements CommandLineRunner {
     private SoftForkImporter softForkImporter;
 
     @Autowired
+    private AddressLabelIndexer addressLabelIndexer;
+
+    @Autowired
     private Subscriber subscriber;
 
     @Autowired
@@ -46,6 +50,7 @@ public class IndexerApplication implements CommandLineRunner {
         System.out.println("Current block height in navcoind: " + navcoinService.getInfo().getBlocks());
 
         softForkImporter.importSoftForks();
+        addressLabelIndexer.indexAddressLabels();
 
         blockRewinder.rewindTop10Blocks();
         blockIndexer.indexAllBlocks();

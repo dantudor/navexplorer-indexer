@@ -1,6 +1,7 @@
 package com.navexplorer.indexer;
 
 import com.IndexerApplication;
+import com.navexplorer.indexer.address.indexer.AddressLabelIndexer;
 import com.navexplorer.indexer.block.indexer.BlockIndexer;
 import com.navexplorer.indexer.block.rewinder.BlockRewinder;
 import com.navexplorer.indexer.communityfund.indexer.PaymentRequestIndexer;
@@ -29,6 +30,9 @@ public class IndexerApplicationTest {
 
     @Mock
     private SoftForkImporter softForkImporter;
+
+    @Mock
+    private AddressLabelIndexer addressLabelIndexer;
 
     @Mock
     private BlockRewinder blockRewinder;
