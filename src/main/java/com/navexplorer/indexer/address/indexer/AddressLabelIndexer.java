@@ -33,7 +33,7 @@ public class AddressLabelIndexer {
 
                 Address address = addressRepository.findByHash(a.getAddress());
                 if (address != null) {
-                    if (!address.getLabel().equals(a.getLabel())) {
+                    if (address.getLabel() != a.getLabel()) {
                         address.setLabel(a.getLabel());
                         addressRepository.save(address);
                     }
