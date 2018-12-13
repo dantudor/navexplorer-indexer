@@ -35,7 +35,6 @@ public class Subscriber {
 
         while (true) {
             ZMsg zMsg = ZMsg.recvMsg(subscriber);
-            logger.info("New message received!");
 
             int messageNumber = 0;
             String messageType = "";
@@ -46,13 +45,11 @@ public class Subscriber {
                 switch(messageNumber) {
                     case 0:
                         messageType = new String(bytes);
-                        logger.info("Message type: " + messageType);
                         break;
                     case 1:
                         if (messageType.equals("hashblock")) {
                             String messageContent = Converter.bin2hex(bytes);
 
-                            logger.info(String.format("Message: %s - %s", messageType, messageContent));
                             blockIndexer.indexAllBlocks();
                             proposalIndexer.updateAllProposals();
                         }

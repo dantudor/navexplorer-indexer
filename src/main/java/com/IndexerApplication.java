@@ -52,6 +52,7 @@ public class IndexerApplication implements CommandLineRunner {
         softForkImporter.importSoftForks();
         addressLabelIndexer.indexAddressLabels();
 
+        blockRewinder.rewindToHeight(800L);
         blockRewinder.rewindTop10Blocks();
         blockIndexer.indexAllBlocks();
 

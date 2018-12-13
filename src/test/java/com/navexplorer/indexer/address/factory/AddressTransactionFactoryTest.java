@@ -2,10 +2,7 @@ package com.navexplorer.indexer.address.factory;
 
 import com.navexplorer.library.address.entity.AddressTransaction;
 import com.navexplorer.library.address.entity.AddressTransactionType;
-import com.navexplorer.library.block.entity.BlockTransaction;
-import com.navexplorer.library.block.entity.BlockTransactionType;
-import com.navexplorer.library.block.entity.Input;
-import com.navexplorer.library.block.entity.Output;
+import com.navexplorer.library.block.entity.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,26 +26,9 @@ public class AddressTransactionFactoryTest {
     }
 
     @Test
-    public void it_can_create_a_community_fund_transaction() {
-        BlockTransaction blockTransaction = new BlockTransaction();
-        blockTransaction.setType(BlockTransactionType.STAKING);
-        String address = "Community Fund";
-
-        Output output = new Output();
-        output.setAddresses(Arrays.asList(address));
-        output.setAmount(0.25);
-        blockTransaction.setOutputs(Arrays.asList(output));
-
-        AddressTransaction transaction = addressTransactionFactory.create(address, blockTransaction);
-        assertThat(transaction.getAddress()).isEqualTo(address);
-        assertThat(transaction.getType()).isEqualTo(AddressTransactionType.COMMUNITY_FUND);
-        assertThat(transaction.getReceived()).isEqualTo(output.getAmount());
-    }
-
-    @Test
     public void it_will_return_null_when_nothing_is_sent_or_received() {
         BlockTransaction blockTransaction = new BlockTransaction();
-        blockTransaction.setType(BlockTransactionType.STAKING);
+        blockTransaction.setType(BlockTransactionType.EMPTY);
         String address = "TEST ADDRESS";
 
         assertThat(addressTransactionFactory.create(address, blockTransaction)).isNull();
@@ -63,6 +43,7 @@ public class AddressTransactionFactoryTest {
         Output output = new Output();
         output.setAddresses(Arrays.asList(address));
         output.setAmount(100.0);
+        output.setType(OutputType.PUBKEYHASH);
         blockTransaction.setOutputs(Arrays.asList(output));
 
         AddressTransaction transaction = addressTransactionFactory.create(address, blockTransaction);
@@ -83,6 +64,7 @@ public class AddressTransactionFactoryTest {
         Output output = new Output();
         output.setAddresses(Arrays.asList(address));
         output.setAmount(100.0);
+        output.setType(OutputType.PUBKEYHASH);
         blockTransaction.setOutputs(Arrays.asList(output));
 
         AddressTransaction transaction = addressTransactionFactory.create(address, blockTransaction);
@@ -103,6 +85,7 @@ public class AddressTransactionFactoryTest {
         Output output = new Output();
         output.setAddresses(Arrays.asList(address));
         output.setAmount(50.0);
+        output.setType(OutputType.PUBKEYHASH);
         blockTransaction.setOutputs(Arrays.asList(output));
 
         AddressTransaction transaction = addressTransactionFactory.create(address, blockTransaction);
@@ -130,6 +113,7 @@ public class AddressTransactionFactoryTest {
         Output output1 = new Output();
         output1.setAddresses(Arrays.asList(address));
         output1.setAmount(25.0);
+        output1.setType(OutputType.PUBKEYHASH);
 
         blockTransaction.setInputs(Arrays.asList(input1, input2, input3));
         blockTransaction.setOutputs(Arrays.asList(output1));
@@ -146,14 +130,17 @@ public class AddressTransactionFactoryTest {
         Output output1 = new Output();
         output1.setAddresses(Arrays.asList(address));
         output1.setAmount(100.0);
+        output1.setType(OutputType.PUBKEYHASH);
 
         Output output2 = new Output();
         output2.setAddresses(Arrays.asList(address));
         output2.setAmount(75.0);
+        output2.setType(OutputType.PUBKEYHASH);
 
         Output output3 = new Output();
         output3.setAddresses(Arrays.asList("OTHER ADDRESS"));
         output3.setAmount(25.0);
+        output3.setType(OutputType.PUBKEYHASH);
 
         blockTransaction.setOutputs(Arrays.asList(output1, output2, output3));
         AddressTransaction transaction = addressTransactionFactory.create(address, blockTransaction);

@@ -107,6 +107,7 @@ public class BlockIndexerTest {
 
         Block newBlock = new Block();
         newBlock.setHash("NEW HASH");
+        newBlock.setStake(1.0);
 
         when(blockIndexingActiveService.isActive()).thenReturn(true);
         when(blockService.getBestBlock()).thenReturn(bestBlock);
@@ -123,17 +124,15 @@ public class BlockIndexerTest {
 
     @Test
     public void it_can_index_the_transactions_in_the_block() {
-        Block bestBlock = null;
-
         org.navcoin.response.Block apiBlock = new org.navcoin.response.Block();
         apiBlock.setPreviousblockhash("PREVIOUS_BLOCK_HASH");
         apiBlock.setTx(Arrays.asList("TX1", "TX2"));
 
         Block newBlock = new Block();
         newBlock.setHash("NEW HASH");
+        newBlock.setStake(1.0);
 
         when(blockIndexingActiveService.isActive()).thenReturn(true);
-        when(blockService.getBestBlock()).thenReturn(bestBlock);
         when(navcoinService.getBlockByHeight(1L)).thenReturn(apiBlock);
         when(blockFactory.createBlock(apiBlock)).thenReturn(newBlock);
         when(blockTransactionService.getByHeight(anyLong())).thenReturn(new ArrayList<>());
@@ -154,6 +153,7 @@ public class BlockIndexerTest {
 
         Block newBlock = new Block();
         newBlock.setHash("NEW HASH");
+        newBlock.setStake(1.0);
 
         Output output = new Output();
         output.setAmount(500.0);
@@ -188,6 +188,7 @@ public class BlockIndexerTest {
 
         Block newBlock = new Block();
         newBlock.setHash("NEW HASH");
+        newBlock.setStake(1.0);
 
         Output output1 = new Output();
         output1.setAmount(0.0);

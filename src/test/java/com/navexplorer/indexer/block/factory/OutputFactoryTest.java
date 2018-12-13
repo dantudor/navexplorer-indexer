@@ -55,6 +55,6 @@ public class OutputFactoryTest {
         assertThat(outputs.get(2).getIndex()).isEqualTo(vout3.getN().intValue());
         assertThat(outputs.get(2).getType()).isEqualTo(OutputType.fromValue(vout3.getScriptPubKey().getType()));
         assertThat(outputs.get(2).getAmount()).isEqualTo(vout3.getValueSat());
-        assertThat(outputs.get(2).getAddresses()).isEqualTo(Arrays.asList("Community Fund"));
+        assertThat(outputs.get(2).getAddresses()).isEmpty();
     }
 }

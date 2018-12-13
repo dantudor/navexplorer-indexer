@@ -59,7 +59,8 @@ public class BlockIndexer {
             mustBeActive();
 
             Block bestBlock = blockService.getBestBlock();
-            Long bestHeight = bestBlock == null ? 0L : bestBlock.getHeight();
+            long bestHeight = bestBlock == null ? 0L : bestBlock.getHeight();
+            Double previousBalance = bestBlock == null ? 0.0 : bestBlock.getBalance();
 
             org.navcoin.response.Block apiBlock = navcoinService.getBlockByHeight(bestHeight + 1);
             if (apiBlock == null) {
@@ -70,7 +71,7 @@ public class BlockIndexer {
                 throw new OrphanBlockException(String.format("Building on a orphan block at height: %s", bestBlock.getHeight()));
             }
 
-            return indexBlock(apiBlock);
+            return indexBlock(apiBlock, previousBalance);
         } catch (OrphanBlockException e) {
             applicationEventPublisher.publishEvent(new OrphanedBlockEvent(this));
         }
@@ -78,7 +79,7 @@ public class BlockIndexer {
         return null;
     }
 
-    private Block indexBlock(org.navcoin.response.Block apiBlock) {
+    private Block indexBlock(org.navcoin.response.Block apiBlock, Double previousBalance) {
         Block block = blockFactory.createBlock(apiBlock);
         blockService.save(block);
 
@@ -86,6 +87,7 @@ public class BlockIndexer {
 
         updateFeesAndSpendForBlock(block);
         updateStakingInfo(block);
+        block.setBalance(previousBalance + block.getStake());
 
         blockService.save(block);
 

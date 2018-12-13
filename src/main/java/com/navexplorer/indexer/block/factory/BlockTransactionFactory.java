@@ -3,10 +3,12 @@ package com.navexplorer.indexer.block.factory;
 import com.navexplorer.library.block.entity.BlockTransaction;
 import com.navexplorer.library.block.entity.BlockTransactionType;
 import com.navexplorer.library.block.entity.Output;
+import com.navexplorer.library.block.entity.OutputType;
 import org.navcoin.response.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -39,7 +41,11 @@ public class BlockTransactionFactory {
         Double inputAmount = transaction.getInputAmount();
 
         if (outputAmount - inputAmount > 0) {
-            return BlockTransactionType.STAKING;
+            if (transaction.hasOutputOfType(OutputType.COLD_STAKING)) {
+                return BlockTransactionType.COLD_STAKING;
+            } else {
+                return BlockTransactionType.STAKING;
+            }
         }
 
         if (inputAmount == 0 && outputAmount == 0) {
@@ -63,7 +69,9 @@ public class BlockTransactionFactory {
                     .filter(t -> t.getAddresses().size() != 0 && !t.getAddresses().contains("Community Fund"))
                     .findFirst().orElse(new Output()).getAddresses().get(0);
 
-            transaction.getInputs().forEach(i -> i.getAddresses().add(stakingAddress));
+            if (!transaction.hasInputWithAddress(stakingAddress)) {
+                transaction.getInputs().forEach(i -> i.getAddresses().add(stakingAddress));
+            }
 
             return transaction.getOutputs().stream()
                     .filter(t -> t.getAddresses().contains(stakingAddress))

@@ -51,8 +51,6 @@ public class ProposalIndexer {
     }
 
     public void updateAllProposals() {
-        logger.info("Community fund - Updating all proposals");
-
         updateProposalsByState(ProposalState.PENDING);
         updateProposalsByState(ProposalState.PENDING_FUNDS);
         updateProposalsByState(ProposalState.ACCEPTED);

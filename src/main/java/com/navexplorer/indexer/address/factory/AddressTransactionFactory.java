@@ -9,12 +9,14 @@ import java.util.List;
 @Service
 public class AddressTransactionFactory {
     public AddressTransaction create(String address, BlockTransaction blockTransaction) {
-        if (blockTransaction.getType().equals(BlockTransactionType.EMPTY)) {
+        if (blockTransaction.isEmpty()) {
             return null;
         }
 
         List<Input> inputs = blockTransaction.getInputsByAddress(address);
         List<Output> outputs = blockTransaction.getOutputsByAddress(address);
+        Double inputAmount = inputs.stream().mapToDouble(Input::getAmount).sum();
+        Double outputAmount = outputs.stream().mapToDouble(Output::getAmount).sum();
 
         AddressTransaction transaction = new AddressTransaction();
         transaction.setAddress(address);
@@ -22,61 +24,58 @@ public class AddressTransactionFactory {
         transaction.setHeight(blockTransaction.getHeight());
         transaction.setTime(blockTransaction.getTime());
 
-        if (isCommunityFund(address)) {
-            transaction.setType(AddressTransactionType.COMMUNITY_FUND);
-            transaction.setReceived(outputs.stream().mapToDouble(Output::getAmount).sum());
+        if (hasColdStakingInputForAddress(inputs, address) || hasColdStakingOutputForAddress(outputs, address)) {
+            if (blockTransaction.isSpend()) {
+                if (inputAmount > outputAmount) {
+                    transaction.setType(AddressTransactionType.SEND);
+                } else {
+                    transaction.setType(AddressTransactionType.RECEIVE);
+                }
+            } else if (blockTransaction.isColdStaking()) {
+                transaction.setType(AddressTransactionType.COLD_STAKING);
+            }
+
+            inputs.forEach(input -> {
+                if (input.getPreviousOutputType().equals(OutputType.COLD_STAKING) && input.getAddresses().get(0).equals(address)) {
+                    transaction.setColdStaking(true);
+                    transaction.setColdStakingSent(transaction.getColdStakingSent() + input.getAmount());
+                } else {
+                    transaction.setStandard(true);
+                    transaction.setSent(transaction.getSent() + input.getAmount());
+                }
+            });
+
+            outputs.forEach(output -> {
+                if (output.isColdStaking() && output.getAddresses().get(0).equals(address)) {
+                    transaction.setColdStaking(true);
+                    transaction.setColdStakingReceived(transaction.getColdStakingReceived() + output.getAmount());
+                } else {
+                    transaction.setStandard(true);
+                    transaction.setReceived(transaction.getReceived() + output.getAmount());
+                }
+            });
 
             return transaction;
         }
 
         inputs.forEach(input -> transaction.setSent(transaction.getSent() + input.getAmount()));
         outputs.forEach(output -> transaction.setReceived(transaction.getReceived() + output.getAmount()));
+        transaction.setStandard(true);
 
-        if (isEmpty(transaction)) {
-            return null;
-        }
-
-        String stakingAddress = blockTransaction.getOutputs().stream()
-                .filter(t -> t.getAddresses().size() != 0 && !t.getAddresses().contains("Community Fund"))
-                .findFirst().orElse(new Output()).getAddresses().get(0);
-
-        if (isStaking(blockTransaction) && address.equals(stakingAddress)) {
+        if (blockTransaction.isStaking()) {
             transaction.setType(AddressTransactionType.STAKING);
-
             return transaction;
         }
 
-        if (isCommunityFundPayout(blockTransaction, address, stakingAddress)) {
-            transaction.setType(AddressTransactionType.COMMUNITY_FUND_PAYOUT);
-        } else if (isReceiving(inputs, outputs)) {
-            transaction.setType(AddressTransactionType.RECEIVE);
-        } else {
-            transaction.setType(AddressTransactionType.SEND);
-        }
-
+        transaction.setType(inputAmount < outputAmount ? AddressTransactionType.RECEIVE : AddressTransactionType.SEND);
         return transaction;
     }
 
-    private Boolean isCommunityFund(String address) {
-        return address.equals("Community Fund");
+    private boolean hasColdStakingOutputForAddress(List<Output> outputs, String address) {
+        return outputs.stream().anyMatch(o -> o.hasAddress(address) && o.getType().equals(OutputType.COLD_STAKING));
     }
 
-    private Boolean isCommunityFundPayout(BlockTransaction transaction, String address, String stakingAddress) {
-        return isStaking(transaction) && !address.equals(stakingAddress);
-    }
-
-    private Boolean isEmpty(AddressTransaction transaction) {
-        return transaction.getSent() == 0.0 && transaction.getReceived() == 0.0;
-    }
-
-    private Boolean isStaking(BlockTransaction transaction) {
-        return transaction.getType().equals(BlockTransactionType.STAKING);
-    }
-
-    private Boolean isReceiving(List<Input> inputs, List<Output> outputs) {
-        Double inputAmount = inputs.stream().mapToDouble(Input::getAmount).sum();
-        Double outputAmount = outputs.stream().mapToDouble(Output::getAmount).sum();
-
-        return inputAmount < outputAmount;
+    private boolean hasColdStakingInputForAddress(List<Input> inputs, String address) {
+        return inputs.stream().anyMatch(i -> i.hasAddress(address) && i.getPreviousOutputType() == OutputType.COLD_STAKING);
     }
 }
