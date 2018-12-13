@@ -87,7 +87,7 @@ public class BlockIndexer {
 
         updateFeesAndSpendForBlock(block);
         updateStakingInfo(block);
-        block.setBalance(previousBalance + block.getStake());
+        block.setBalance(previousBalance + (block.getStake() != null ? block.getStake() : 0.0));
 
         blockService.save(block);
 
